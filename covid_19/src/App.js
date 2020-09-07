@@ -6,30 +6,37 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: "Fransisco",
+      countries: [],
+      stats: [],
+      // searchField: "",
     };
+  }
+  async componentDidMount() {
+    const resp = await fetch("https://covid19.mathdro.id/api/countries");
+    const countries = await resp.json();
+    this.setState({ countries });
+
+    console.log(this.state.countries.countries);
+
+    this.state.countries.countries.forEach(async (country) => {
+      const resp = await fetch(
+        `https://covid19.mathdro.id/api/countries/${country.name.confirmed.value}`
+      );
+      const data = await resp.json();
+      console.log(data.length);
+      if (data.length)
+        this.setState((prevState) => ({
+          stats: prevState.stats,
+        }));
+    });
   }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {this.state.name}
-          </a>
-
-          <button onClick={() => this.setState({ name: `Michael` })}>
-            Change Name
-          </button>
-        </header>
+        {/* <h1>Covid19 Stats Web App</h1>
+        {this.state.stats.map((country) => (
+          <h1>{country.Country}</h1>
+        ))} */}
       </div>
     );
   }
