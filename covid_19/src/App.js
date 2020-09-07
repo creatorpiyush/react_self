@@ -12,22 +12,27 @@ class App extends React.Component {
     };
   }
   async componentDidMount() {
-    const resp = await fetch("https://covid19.mathdro.id/api/countries");
+    const resp = await fetch("https://api.covid19api.com/countries");
     const countries = await resp.json();
     this.setState({ countries });
 
-    console.log(this.state.countries.countries);
+    console.log(this.state.countries);
 
-    this.state.countries.countries.forEach(async (country) => {
+    this.state.countries.forEach(async (country) => {
       const resp = await fetch(
-        `https://covid19.mathdro.id/api/countries/${country.name.confirmed.value}`
+        `https://api.covid19api.com/total/country/${country.Slug}`
       );
       const data = await resp.json();
+      console.log(data);
+
       console.log(data.length);
-      if (data.length)
-        this.setState((prevState) => ({
-          stats: prevState.stats,
+
+      if (data.length) {
+        console.log(data.length);
+        this.setState((pre) => ({
+          stats: pre.stats,
         }));
+      }
     });
   }
   render() {
